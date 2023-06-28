@@ -5,8 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Background="Black">
-    <Grid>
+        Title="Mose Manager" Height="800" Width="1300">
+    <Window.Background>
+        <ImageBrush ImageSource="D:\itstep\wpf\TaskManager\TaskManager\AppPictures\Style\back.jpg"/>
+    </Window.Background>
+    <Window.Icon>
+        <BitmapImage UriSource="D:\itstep\wpf\TaskManager\TaskManager\AppPictures\Style\ico.ico"/>
+    </Window.Icon>
+    <Grid Margin="0,200,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="pending" Background="Transparent" BorderBrush="White" Grid.Column="0">
+            
+        </ListBox>
+        <ListBox x:Name="in_progress" Background="Transparent" BorderBrush="White" Grid.Column="1">
 
+        </ListBox>
+        <ListBox x:Name="completed" Background="Transparent" BorderBrush="White" Grid.Column="2">
+
+        </ListBox>
+        <ListBox x:Name="overdue" Background="Transparent" BorderBrush="White" Grid.Column="3">
+
+        </ListBox>
     </Grid>
 </Window>
