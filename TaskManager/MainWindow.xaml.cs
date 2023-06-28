@@ -23,6 +23,17 @@ namespace TaskManager
         public MainWindow()
         {
             InitializeComponent();
+            ListBoxItem newItem = new ListBoxItem();
+            newItem.Content = "Hello mir";
+
+            newItem.Style = (Style)FindResource("pendingStyle");
+
+            pending.Items.Add(newItem);
+        }
+
+        private void changeAvatarBtn_Click(object sender, RoutedEventArgs e)
+        {
+            avatar.Source = new BitmapImage(new Uri("D:\\itstep\\wpf\\TaskManager\\TaskManager\\AppPictures\\Style\\avatar2.png"));
         }
     }
 }
