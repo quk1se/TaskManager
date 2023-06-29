@@ -51,9 +51,49 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="ListBoxItem" x:Key="completedStyle">
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="D:\itstep\wpf\TaskManager\TaskManager\AppPictures\Style\completed.ico"
+                           Width="32"
+                           Height="32"
+                           Margin="0,10" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <ContentPresenter Content="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="ListBoxItem" x:Key="overdueStyle">
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="D:\itstep\wpf\TaskManager\TaskManager\AppPictures\Style\overdue.ico"
+                           Width="32"
+                           Height="32"
+                           Margin="0,10" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <ContentPresenter Content="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style TargetType="TextBlock" x:Key="listTxt">
             <Setter Property="Margin" Value="10,15,0,0"/>
         </Style>
+        <!--удалиит | -->
+
         <Style TargetType="ListBoxItem" x:Key="backList">
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
@@ -73,16 +113,24 @@
             <ColumnDefinition Width="11*"></ColumnDefinition>
             <ColumnDefinition Width="11*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="menu" BorderBrush="Gray" Grid.Column="0" Height="784" VerticalAlignment="Top" Margin="0,-200,0,0">
-            <ListBoxItem  Height="80" Width="80" Margin="20" Background="Gray">
-                <Image x:Name="avatar" Source="D:\itstep\wpf\TaskManager\TaskManager\AppPictures\Style\avatar.png" Width="70" Margin="0,0,0,0"/>
-            </ListBoxItem>
-            <ListBoxItem>
-                <Button x:Name="changeAvatarBtn" Width="20" Height="20" Click="changeAvatarBtn_Click">
-                    1
-                </Button>
-            </ListBoxItem>
-        </ListBox>
+        <Rectangle Margin="0,-200,0,0" Fill="White"/>
+        <Image x:Name="avatar" Source="D:\itstep\wpf\TaskManager\TaskManager\AppPictures\Style\avatar.png" Margin="50,-181,50,665"></Image>
+        <Rectangle  Fill="Transparent" Margin="57,-185,56,662" Stroke="Black" StrokeThickness="6" RadiusX="10" RadiusY="10"/>
+        <TextBlock x:Name="accountName" Height="30" VerticalAlignment="Top" TextAlignment="Center" Margin="0,-96,0,0" FontFamily="Times New Roman" FontSize="20" Text="Alexandr Kalyan"/>
+        <TextBlock x:Name="accountTag" Height="30" VerticalAlignment="Top" TextAlignment="Center" Margin="0,-71,0,0" FontFamily="Times New Roman" FontSize="15" Text="@quk1se"/>
+        <Button x:Name="changeAvatarBtn" Margin="0,-52,0,585" Width="200" Content="Change avatar" FontFamily="Times New Roman" FontSize="18" Background="Transparent" BorderBrush="Transparent" Click="changeAvatarBtn_Click" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="0.249"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="0.096"/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
+
+
+
         <ListBox x:Name="pending" BorderBrush="Gray" Grid.Column="1">
             <ListBoxItem Style="{StaticResource pendingStyle}">
                 <TextBlock Style="{StaticResource listTxt}">
@@ -98,20 +146,18 @@
             </ListBoxItem>
         </ListBox>
         <ListBox x:Name="completed" BorderBrush="Gray" Grid.Column="3">
-            <ListBox.Resources>
-                <Style TargetType="ListBoxItem" x:Name="completedStyle">
-                    <Setter Property="FontFamily" Value="Times New Roman" />
-                    <Setter Property="Foreground" Value="White"/>
-                </Style>
-            </ListBox.Resources>
+            <ListBoxItem Style="{StaticResource completedStyle}">
+                <TextBlock Style="{StaticResource listTxt}">
+                    asd
+                </TextBlock>
+            </ListBoxItem>
         </ListBox>
         <ListBox x:Name="overdue" BorderBrush="Gray" Grid.Column="4">
-            <ListBox.Resources>
-                <Style TargetType="ListBoxItem" x:Name="overdueStyle">
-                    <Setter Property="FontFamily" Value="Times New Roman" />
-                    <Setter Property="Foreground" Value="White"/>
-                </Style>
-            </ListBox.Resources>
+            <ListBoxItem Style="{StaticResource overdueStyle}">
+                <TextBlock Style="{StaticResource listTxt}">
+                    asd
+                </TextBlock>
+            </ListBoxItem>
         </ListBox>
     </Grid>
 </Window>
