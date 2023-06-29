@@ -8,10 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="arrowLeft.png" />
+    <None Remove="arrowRight.png" />
     <None Remove="background.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="arrowLeft.png" />
+    <Resource Include="arrowRight.png" />
     <Resource Include="background.png" />
   </ItemGroup>
 

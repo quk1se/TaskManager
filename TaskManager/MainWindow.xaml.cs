@@ -26,7 +26,6 @@ namespace TaskManager
         public MainWindow()
         {
             InitializeComponent();
-            AddNewElement(pending);
         }
 
         private void changeAvatarBtn_Click(object sender, RoutedEventArgs e)
@@ -60,13 +59,12 @@ namespace TaskManager
                 }
             }
         }
-        private void AddNewElement(ListBox listName)
+        private void AddTask(ListBox listName, string taskName, string pictureName)
         {
-            Style pendingStyle = (Style)FindResource("pendingStyle");
             Style listTxtStyle = (Style)FindResource("listTxt");
 
             ListBoxItem newItem = new ListBoxItem();
-            newItem.Content = "asd";
+            newItem.Content = taskName;
 
             DataTemplate dataTemplate = new DataTemplate();
             FrameworkElementFactory stackPanelFactory = new FrameworkElementFactory(typeof(StackPanel));
@@ -75,7 +73,7 @@ namespace TaskManager
 
             stackPanelFactory.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
 
-            imageFactory.SetValue(Image.SourceProperty, new BitmapImage(new Uri("D:\\itstep\\wpf\\TaskManager\\TaskManager\\AppPictures\\Style\\pending.ico")));
+            imageFactory.SetValue(Image.SourceProperty, new BitmapImage(new Uri($"D:\\itstep\\wpf\\TaskManager\\TaskManager\\AppPictures\\Style\\{pictureName}.ico")));
             imageFactory.SetValue(WidthProperty, 32.0);
             imageFactory.SetValue(HeightProperty, 32.0);
             imageFactory.SetValue(MarginProperty, new Thickness(0, 10, 0, 0));
@@ -92,10 +90,53 @@ namespace TaskManager
             dataTemplate.VisualTree = stackPanelFactory;
 
             newItem.ContentTemplate = dataTemplate;
-            newItem.Style = pendingStyle;
 
             listName.Items.Add(newItem);
         }
 
+        private void addTask_Click(object sender, RoutedEventArgs e)
+        {
+            WindowNewTask window = new WindowNewTask();
+            window.ShowDialog();
+            if (window.is_click)
+                AddTask(pending,window.taskNameTxt,"pending");
+        }
+
+        public void RemoveTo(ListBox listTo, ListBox listFrom, string pictureName)
+        {
+            try
+            {
+                ListBoxItem selectedItem = listTo.SelectedItem as ListBoxItem;
+                if (selectedItem != null)
+                {
+                    AddTask(listFrom, selectedItem.Content.ToString(), pictureName);
+                    listTo.Items.Remove(listTo.SelectedItem);
+                }
+            }
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("Select a task!");
+            }
+        }
+
+        private void toProgressBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RemoveTo(pending, in_progress, "progress");
+        }
+
+        private void toPendingBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RemoveTo(in_progress, pending, "pending");
+        }
+
+        private void toCompletedBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RemoveTo(in_progress, completed, "completed");
+        }
+
+        private void toProgressFromCompletedBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RemoveTo(completed, in_progress, "progress");
+        }
     }
 }
