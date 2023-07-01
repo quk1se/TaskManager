@@ -21,13 +21,22 @@ namespace TaskManager
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
-        public string newImgPath;
+    { 
+
+        private string newImgPath; // Image for task state
+
+        public string NewImgPath
+        {
+            get { return newImgPath; }
+            set { newImgPath = value; }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        // Button to change your profile picture 
         private void changeAvatarBtn_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
@@ -35,30 +44,31 @@ namespace TaskManager
                 ValidateNames = false,
                 CheckFileExists = false,
                 CheckPathExists = true,
-                FileName = "Выберите файл"
+                FileName = "Choose file"
             };
             if (openFileDialog.ShowDialog() == true)
             {
-                string newImgPath = System.IO.Path.GetFullPath(openFileDialog.FileName);
+                string NewImgPath = System.IO.Path.GetFullPath(openFileDialog.FileName);
                 try
                 {
-                    BitmapDecoder decoder = BitmapDecoder.Create(new Uri(newImgPath), BitmapCreateOptions.None, BitmapCacheOption.OnDemand);
-                    avatar.Source = new BitmapImage(new Uri(newImgPath));
+                    BitmapDecoder decoder = BitmapDecoder.Create(new Uri(NewImgPath), BitmapCreateOptions.None, BitmapCacheOption.OnDemand);
+                    avatar.Source = new BitmapImage(new Uri(NewImgPath));
 
                     avatar.SetValue(RenderOptions.BitmapScalingModeProperty, BitmapScalingMode.HighQuality);
                 }
                 catch (NotSupportedException)
                 {
-                    MessageBox.Show("Ошибка, некорректный формат файла изображения!");
+                    MessageBox.Show("Error, incorrect image file format!");
                     return;
                 }
                 catch (System.IO.FileNotFoundException)
                 {
-                    MessageBox.Show("Ошибка, выберите изображение!");
+                    MessageBox.Show("Error, pick the image!");
                     return;
                 }
             }
         }
+        // Method to add new task in pending list
         private void AddTask(ListBox listName, string taskName, string pictureName)
         {
             Style listTxtStyle = (Style)FindResource("listTxt");
@@ -94,6 +104,7 @@ namespace TaskManager
             listName.Items.Add(newItem);
         }
 
+        // Button for add new task in list
         private void addTask_Click(object sender, RoutedEventArgs e)
         {
             WindowNewTask window = new WindowNewTask();
@@ -102,6 +113,7 @@ namespace TaskManager
                 AddTask(pending,window.taskNameTxt,"pending");
         }
 
+        // Method to removing select task to a different other task state
         public void RemoveTo(ListBox listTo, ListBox listFrom, string pictureName)
         {
             try
@@ -118,22 +130,22 @@ namespace TaskManager
                 MessageBox.Show("Select a task!");
             }
         }
-
+        // Button for removing select task from pending to progress states
         private void toProgressBtn_Click(object sender, RoutedEventArgs e)
         {
             RemoveTo(pending, in_progress, "progress");
         }
-
+        // Button for removing select task from progress to pending states
         private void toPendingBtn_Click(object sender, RoutedEventArgs e)
         {
             RemoveTo(in_progress, pending, "pending");
         }
-
+        // Button for removing select task from progress to completed states
         private void toCompletedBtn_Click(object sender, RoutedEventArgs e)
         {
             RemoveTo(in_progress, completed, "completed");
         }
-
+        // Button for removing select task from completed to progress states
         private void toProgressFromCompletedBtn_Click(object sender, RoutedEventArgs e)
         {
             RemoveTo(completed, in_progress, "progress");
