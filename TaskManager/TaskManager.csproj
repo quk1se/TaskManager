@@ -11,6 +11,7 @@
     <None Remove="arrowLeft.png" />
     <None Remove="arrowRight.png" />
     <None Remove="background.png" />
+    <None Remove="trash.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
     <Resource Include="arrowLeft.png" />
     <Resource Include="arrowRight.png" />
     <Resource Include="background.png" />
+    <Resource Include="trash.png" />
   </ItemGroup>
 
 </Project>

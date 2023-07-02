@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TaskManager
 {
@@ -47,6 +48,16 @@ namespace TaskManager
         {
             get { return taskListProgress; }
             set { taskListProgress = value; }
+        }
+        public Dictionary<string, DateTime> TaskListComplete
+        {
+            get { return taskListComplete; }
+            set { taskListComplete = value; }
+        }
+        public Dictionary<string, DateTime> TaskListOverdue
+        {
+            get { return taskListOverdue; }
+            set { taskListOverdue = value; }
         }
         public DispatcherTimer Timer
         {
@@ -139,8 +150,16 @@ namespace TaskManager
             window.ShowDialog();
             if (window.is_click)
             {
+                try
+                {
+                    TaskListPending.Add(window.taskNameTxt, window.taskDeadline);
+                }
+                catch (System.ArgumentException)
+                {
+                    MessageBox.Show("Enter another task name please!");
+                    return;
+                }
                 AddTask(pending, window.taskNameTxt, "pending");
-                TaskListPending.Add(window.taskNameTxt,window.taskDeadline);
             }
 
         }
@@ -221,6 +240,37 @@ namespace TaskManager
                     }
                 }
             }
+        }
+
+        public void DeleteTask(ListBox list,Dictionary<string,DateTime> dict)
+        {
+            ListBoxItem selectedItem = list.SelectedItem as ListBoxItem;
+            if (selectedItem != null)
+            {
+                foreach (var item in dict)
+                {
+                    if (item.Key == selectedItem.Content.ToString())
+                    {
+                        dict.Remove(item.Key);
+                    }
+                }
+                list.Items.Remove(list.SelectedItem);
+            }
+        }
+
+        private void deletePending_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteTask(pending, TaskListPending);
+        }
+
+        private void deleteComplete_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteTask(completed, TaskListComplete);
+        }
+
+        private void deleteOverdue_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteTask(overdue, TaskListOverdue);
         }
     }
 }

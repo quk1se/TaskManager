@@ -65,5 +65,20 @@
                 <ImageBrush ImageSource="/arrowLeft.png"/>
             </Button.Background>
         </Button>
+        <Button x:Name="deletePending" Grid.Column="1" HorizontalAlignment="Center" Height="35" Margin="0,-40,0,0" VerticalAlignment="Top" BorderBrush="Transparent" Width="35" Click="deletePending_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/trash.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="deleteComplete" Grid.Column="3" HorizontalAlignment="Center" Height="35" Margin="0,-40,0,0" VerticalAlignment="Top" BorderBrush="Transparent" Width="36" Click="deleteComplete_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/trash.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="deleteOverdue" Grid.Column="4" HorizontalAlignment="Center" Height="35" Margin="0,-40,0,0" VerticalAlignment="Top" BorderBrush="Transparent" Width="35" Click="deleteOverdue_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/trash.png"/>
+            </Button.Background>
+        </Button>
     </Grid>
 </Window>
