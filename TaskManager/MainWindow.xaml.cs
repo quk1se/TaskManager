@@ -193,22 +193,21 @@ namespace TaskManager
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            List<string> keysToRemove = new List<string>();
-
-            foreach (KeyValuePair<string, DateTime> item in TaskListPending)
+            foreach (var item in TaskListPending)
             {
                 if (item.Value == DateTime.Now || item.Value < DateTime.Now)
                 {
                     AddTask(overdue, item.Key, "overdue");
-                    keysToRemove.Add(item.Key);
+                    for (int n = pending.Items.Count - 1; n >= 0; --n)
+                    {
+                        if (pending.Items[n].ToString().Contains(item.Key))
+                        {
+                            pending.Items.RemoveAt(n);
+                        }
+                    }
                 }
             }
 
-            foreach (string key in keysToRemove)
-            {
-                pending.Items.Remove(key);
-                TaskListPending.Remove(key);
-            }
         }
     }
 }
