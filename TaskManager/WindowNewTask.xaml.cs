@@ -20,6 +20,7 @@ namespace TaskManager
     public partial class WindowNewTask : Window
     {
         public string taskNameTxt;
+        public DateTime taskDeadline;
         public bool is_click = false;
         public WindowNewTask()
         {
@@ -34,6 +35,8 @@ namespace TaskManager
                 return;
             }
             taskNameTxt = txtBox.Text;
+            DateTime.TryParse(deadLine.Text, out taskDeadline);
+            MessageBox.Show(taskDeadline.ToString());
             is_click = true;
             this.Close();
         }

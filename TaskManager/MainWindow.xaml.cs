@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace TaskManager
 {
@@ -24,16 +27,40 @@ namespace TaskManager
     { 
 
         private string newImgPath; // Image for task state
+        private Dictionary<string,DateTime> taskListPending = new Dictionary<string, DateTime>();
+        private Dictionary<string, DateTime> taskListProgress = new Dictionary<string, DateTime>();
+        private Dictionary<string, DateTime> taskListComplete = new Dictionary<string, DateTime>();
+        private Dictionary<string, DateTime> taskListOverdue = new Dictionary<string, DateTime>();
+        private DispatcherTimer timer;
 
         public string NewImgPath
         {
             get { return newImgPath; }
             set { newImgPath = value; }
         }
+        public Dictionary<string, DateTime> TaskListPending
+        {
+            get { return taskListPending; }
+            set { taskListPending = value; }
+        }
+        public Dictionary<string, DateTime> TaskListProgress
+        {
+            get { return taskListProgress; }
+            set { taskListProgress = value; }
+        }
+        public DispatcherTimer Timer
+        {
+            get { return timer; }
+            set { timer = value; }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
+            Timer = new DispatcherTimer();
+            Timer.Interval = TimeSpan.FromSeconds(60);
+            Timer.Tick += Timer_Tick;
+            Timer.Start();
         }
 
         // Button to change your profile picture 
@@ -75,6 +102,7 @@ namespace TaskManager
 
             ListBoxItem newItem = new ListBoxItem();
             newItem.Content = taskName;
+            
 
             DataTemplate dataTemplate = new DataTemplate();
             FrameworkElementFactory stackPanelFactory = new FrameworkElementFactory(typeof(StackPanel));
@@ -110,17 +138,29 @@ namespace TaskManager
             WindowNewTask window = new WindowNewTask();
             window.ShowDialog();
             if (window.is_click)
-                AddTask(pending,window.taskNameTxt,"pending");
+            {
+                AddTask(pending, window.taskNameTxt, "pending");
+                TaskListPending.Add(window.taskNameTxt,window.taskDeadline);
+            }
+
         }
 
         // Method to removing select task to a different other task state
-        public void RemoveTo(ListBox listTo, ListBox listFrom, string pictureName)
+        public void RemoveTo(ListBox listTo, ListBox listFrom, string pictureName,Dictionary<string,DateTime> listName, Dictionary<string, DateTime> listNameRemove)
         {
             try
             {
                 ListBoxItem selectedItem = listTo.SelectedItem as ListBoxItem;
                 if (selectedItem != null)
                 {
+                    foreach (var item in taskListPending)
+                    {
+                        if (item.Key == selectedItem.Content.ToString())
+                        {
+                            listName.Add(item.Key,item.Value);
+                            listNameRemove.Remove(item.Key) ;
+                        }
+                    }
                     AddTask(listFrom, selectedItem.Content.ToString(), pictureName);
                     listTo.Items.Remove(listTo.SelectedItem);
                 }
@@ -133,22 +173,42 @@ namespace TaskManager
         // Button for removing select task from pending to progress states
         private void toProgressBtn_Click(object sender, RoutedEventArgs e)
         {
-            RemoveTo(pending, in_progress, "progress");
+            RemoveTo(pending, in_progress, "progress",TaskListProgress, TaskListPending);
         }
         // Button for removing select task from progress to pending states
         private void toPendingBtn_Click(object sender, RoutedEventArgs e)
         {
-            RemoveTo(in_progress, pending, "pending");
+            RemoveTo(in_progress, pending, "pending", TaskListPending, TaskListProgress);
         }
         // Button for removing select task from progress to completed states
         private void toCompletedBtn_Click(object sender, RoutedEventArgs e)
         {
-            RemoveTo(in_progress, completed, "completed");
+            RemoveTo(in_progress, completed, "completed", taskListComplete, TaskListProgress);
         }
         // Button for removing select task from completed to progress states
         private void toProgressFromCompletedBtn_Click(object sender, RoutedEventArgs e)
         {
-            RemoveTo(completed, in_progress, "progress");
+            RemoveTo(completed, in_progress, "progress", TaskListProgress, taskListComplete);
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            List<string> keysToRemove = new List<string>();
+
+            foreach (KeyValuePair<string, DateTime> item in TaskListPending)
+            {
+                if (item.Value == DateTime.Now || item.Value < DateTime.Now)
+                {
+                    AddTask(overdue, item.Key, "overdue");
+                    keysToRemove.Add(item.Key);
+                }
+            }
+
+            foreach (string key in keysToRemove)
+            {
+                pending.Items.Remove(key);
+                TaskListPending.Remove(key);
+            }
         }
     }
 }
