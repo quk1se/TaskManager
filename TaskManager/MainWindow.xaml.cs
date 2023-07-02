@@ -207,7 +207,20 @@ namespace TaskManager
                     }
                 }
             }
-
+            foreach (var item in TaskListProgress)
+            {
+                if (item.Value == DateTime.Now || item.Value < DateTime.Now)
+                {
+                    AddTask(overdue, item.Key, "overdue");
+                    for (int n = in_progress.Items.Count - 1; n >= 0; --n)
+                    {
+                        if (in_progress.Items[n].ToString().Contains(item.Key))
+                        {
+                            in_progress.Items.RemoveAt(n);
+                        }
+                    }
+                }
+            }
         }
     }
 }
