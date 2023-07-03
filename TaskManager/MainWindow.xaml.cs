@@ -21,9 +21,6 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TaskManager
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     { 
 
@@ -68,6 +65,9 @@ namespace TaskManager
         public MainWindow()
         {
             InitializeComponent();
+            RenderOptions.SetBitmapScalingMode(deleteComplete, BitmapScalingMode.HighQuality);
+            RenderOptions.SetBitmapScalingMode(deleteOverdue, BitmapScalingMode.HighQuality);
+            RenderOptions.SetBitmapScalingMode(deletePending, BitmapScalingMode.HighQuality);
             Timer = new DispatcherTimer();
             Timer.Interval = TimeSpan.FromSeconds(60);
             Timer.Tick += Timer_Tick;
@@ -152,6 +152,10 @@ namespace TaskManager
             {
                 try
                 {
+                    if (TaskListProgress.ContainsKey(window.taskNameTxt) || TaskListComplete.ContainsKey(window.taskNameTxt) || TaskListOverdue.ContainsKey(window.taskNameTxt))
+                    {
+                        MessageBox.Show("Enter another task name please!"); return;
+                    }
                     TaskListPending.Add(window.taskNameTxt, window.taskDeadline);
                 }
                 catch (System.ArgumentException)
@@ -172,7 +176,7 @@ namespace TaskManager
                 ListBoxItem selectedItem = listTo.SelectedItem as ListBoxItem;
                 if (selectedItem != null)
                 {
-                    foreach (var item in taskListPending)
+                    foreach (var item in listNameRemove)
                     {
                         if (item.Key == selectedItem.Content.ToString())
                         {
@@ -212,20 +216,6 @@ namespace TaskManager
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            foreach (var item in TaskListPending)
-            {
-                if (item.Value == DateTime.Now || item.Value < DateTime.Now)
-                {
-                    AddTask(overdue, item.Key, "overdue");
-                    for (int n = pending.Items.Count - 1; n >= 0; --n)
-                    {
-                        if (pending.Items[n].ToString().Contains(item.Key))
-                        {
-                            pending.Items.RemoveAt(n);
-                        }
-                    }
-                }
-            }
             foreach (var item in TaskListProgress)
             {
                 if (item.Value == DateTime.Now || item.Value < DateTime.Now)
@@ -235,6 +225,7 @@ namespace TaskManager
                     {
                         if (in_progress.Items[n].ToString().Contains(item.Key))
                         {
+                            TaskListProgress.Remove(item.Key);
                             in_progress.Items.RemoveAt(n);
                         }
                     }
